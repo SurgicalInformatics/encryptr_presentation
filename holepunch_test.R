@@ -9,3 +9,5 @@ write_compendium_description(package = "Encryptr presentation",
 write_dockerfile(maintainer = "SurgicalInformatics")
 
 generate_badge()
+
+build_binder()
