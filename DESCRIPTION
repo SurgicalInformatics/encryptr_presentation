@@ -14,12 +14,15 @@ Depends:
     dplyr,
     DT,
     encryptr,
+    holepunch,
     knitr,
     leaflet,
+    remotes,
     rmarkdown,
     rsconnect,
     xaringan
 Remotes: 
+    karthik/holepunch,
     rstudio/rmarkdown,
     SurgicalInformatics/encryptr
 Encoding: UTF-8

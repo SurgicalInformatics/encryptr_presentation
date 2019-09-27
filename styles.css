@@ -32,9 +32,9 @@ slides > slide.title-slide p {
 }
 
 slides > slide:not(.nobackground):before {
-  height: 60px;
-  width: 50px;
-  background-size: 60px 50px;
+  height: 80px;
+  width: 69.3px;
+  background-size: 69px 79px;
 }
 
 slides > slide hgroup h2 {
