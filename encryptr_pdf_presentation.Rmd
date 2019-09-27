@@ -2,23 +2,19 @@
 title: 'Encryptr: Easily Encrypt and Decrypt Sensitive Data with R'
 author: "Cameron Fairfield"
 date: "2019-Sep-13"
-output:
-  ioslides_presentation:
-    css: styles.css
-    df_print: tibble
-    logo: encryptr_hex.png
-    widescreen: yes
+output:   
+  beamer_presentation:
     incremental: true
+classoption: "aspectratio=169"
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
-
-
 ```{r, include = FALSE}
 system(paste0("rm ", getwd(), "/id_rsa*"))
-options(width=150)
+options(width=70)
 options(dplyr.print_min = 6, dplyr.print_max = 6)
 ```
 
@@ -38,7 +34,7 @@ Scotsman, Aug-30, 2019
 
 - Patients expect us to safeguard their data
 
-- Solutions include removing unnecessary data and securing necessary data
+- Data can be minimised, deleted or encrypted
 
 
 ## Research and Data {.fourlinestext}
@@ -57,7 +53,7 @@ Scotsman, Aug-30, 2019
 
 - Easy pseudonymisation by encryption
 
-- RSA encryption with private / public key pair
+- RSA encryption with private / public key pair (asymmetric)
 
 - Encryption of vectors, variables and files
 
@@ -77,22 +73,22 @@ https://github.com/surgicalinformatics
 ----
 
 ```{r encryptr-data, echo = TRUE, message=FALSE}
-### <b>
+
 library(encryptr)
-### </b>
+
 library(dplyr) # Used in presentation examples
 
 # Encryptr comes with an example data set of GPs (Family Physicians)
-### <b>
+
 gp
-### </b>
+
 ```
 
 ## Public and Private Keys {.basictext}
 ```{r genkeys, echo = TRUE, message = FALSE, warning=FALSE}
-### <b>
+
 genkeys()
-### </b>
+
 ```
 Default values are <span style="color:green">"id_rsa"</span> and <span style="color:green">"id_rsa.pub"</span>
 
@@ -105,10 +101,10 @@ knitr::include_graphics("API_dialogue.png")
 
 ----
 ```{r encrypt_var, echo = TRUE}
-### <b>
+
 gp_encrypt = gp %>% 
   encrypt(name)
-### </b>
+
 gp_encrypt %>% 
   select(organisation_code, name, address1)
 ```
@@ -116,11 +112,11 @@ gp_encrypt %>%
 
 ----
 ```{r decrypt_var, echo=TRUE}
-### <b>
+
 gp_encrypt %>%
   slice(1:2) %>%
   decrypt(name) %>% 
-  ### </b>
+  
   select(organisation_code, name, address1)
 ```
 
@@ -137,7 +133,7 @@ gp_encrypt %>%
 ## Encryptr Customisation Examples
 ```{r encryptr-customisation, eval=FALSE, echo=TRUE}
 # Creating a lookup table with specified name and filename
-### <b>
+
 gp %>% 
   encrypt(name, postcode, 
           lookup = TRUE, write_lookup = TRUE, 
@@ -147,21 +143,21 @@ gp %>%
 # Using a public key hosted at URL
 gp %>% 
   encrypt(name, public_key_path = "https://<some_url>/id_rsa.pub")
-### </b>
+
 ```
 
 ## Encryptr File Encryption
 ```{r file-encryption, eval=FALSE, echo=TRUE}
 gp_encrypt %>% write_csv("gp_enc.csv")
 
-### <b>
+
 encrypt_file("gp.csv")
 
 
 
 # Encrypted file will have suffix: `.encryptr.bin`
 decrypt_file("gp.csv.encryptr.bin", file_name = "gp2.csv")
-### </b>
+
 ```
 
 ## Encryptr Ciphertexts Not Matchable {.fourlinestext}
@@ -175,9 +171,9 @@ decrypt_file("gp.csv.encryptr.bin", file_name = "gp2.csv")
 
 ----
 ```{r encryptr-rep, echo=TRUE}
-### <b>
+
 encrypt_vec(c("a name", "a name", "a name"))
-### </b>
+
 ```
 
 ## Technical Aspects of Encryptr {.fourlinestext}
@@ -199,4 +195,3 @@ encrypt_vec(c("a name", "a name", "a name"))
 - Data governance considerations
 
 ## Questions
-
