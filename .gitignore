@@ -5,3 +5,8 @@
 id_rsa
 id_rsa.pub
 rsconnect*
+*.pdf
+*.pptx
+*xaringan*
+rmedicine_notes.Rmd
+*.html
