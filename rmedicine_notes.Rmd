@@ -1,0 +1,130 @@
+---
+title: "R Medicine Notes"
+author: "Cameron Fairfield"
+date: "9/13/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Using multi-state models and absolute risk in clinical research
+Survival analysis can be thought of as a two-by-two table: column headings relate to single or multiple events and row headings relate to one or multiple possible event classifications.
+
+`Survival` package written by Terry Therneau. Amazing 666 downstream dependencies. `Survival` moved to 3.0 on Wednesday and has been submitted to CRAN.
+
+Version 3.0 allows multi-state modelling where there are competing risks. This will provide two elements of output for a model. This means that when running a Cox PH model for MGUS there will be model metrics for the risk of multiple myeloma and other model metrics for death. In this example the risk of myeloma is not really any greater in women except when considering the fact they live longer. 
+
+
+For AML the usual trajectory is from diagnosis to chemotherapy to stem cell transplant to relapse. All stages can then move to death.
+
+With the multi-state models the raw data should be in two rows e.g. one row detailing relapse and one row detailing death. The first level in each row should be equivalent to no event. 
+
+`survcheck()` will interogate the data and run some sense-checks. Another option would be to rationalise events by only focussing on one or two (e.g. drop chemotherapy). 
+
+Built on Aalen-Johansen estimator. The `P` will always add to one across all states, such that patients have to be in at least one stage in the AML pathway.
+
+Some of the functions run on the assumption that conditions are irreversible or if are reversed do not change the underlying nature of the individual participants.
+
+`Surv()` allows a number of separate analyses with coefficients to be run where a standard set of covariates can be passed to each model but a different covariate is used with each model. Using this technique it is possible to generate a HR for each model in which the progression from one state (or collapsed group of states) is calculated to another state e.g. death.
+
+For example it is possible to calculate the HR for risk of death secondary to NAFLD based on the number of metabolic syndrome covariates. The expected output is that NAFLD has a greater impact on risk of death (and higher HR) for those with 0 components (although the CI is wider due to low numbers of death) whilst those with 3 components of metabolic syndrome have very minimal added risk secondary to NAFLD. This kind of technique could be used to demonstrate the relative importance of gallstones on risk of CVD related to elements of the metabolic syndrome - again it would be expected that the higher HR for gallstones would be seen in healthy individuals.
+
+A time-in-state plot can be made when a explanatory variable creates subgroups in each of which an area of time beyond an age can be estimated within various disease states. 
+
+
+## Analytic memos for reproducible research using R/Rmarkdown
+`Memor` - used in R Markdown documents. `Memor` allows controlling of headers and footers in Rmd. The main aim is to facilitate improved PDF-rendering. At present `memor` is limited to LaTeX and PDF and there are plans for HTML output.
+
+
+## Dynamic Report in Cohort Study Enrollment Process: Progress Monitor and Quality Control
+`cohortplot` - uses the `plotly` to generate plots to document the enrolment process for a cohort study. 
+
+`trackplot()` will take dates of patient enrolment, start date, end date and target number enrolment. This will determine whether the target enrolment is likely to be met.
+
+Currently the package is not published.
+
+
+## R Training at Work: How to Introduce R into Your Academic Research Group
+Follows a very similar pattern to HealthyR Notebooks.
+
+
+
+## Automated Identification of Patients with Advanced Illness
+Used the `carrot` package to perform penalised logistic regression, SVM and random forests to identify ICD10 codes most strongly associated with frailty clusters.
+
+
+## Spliny: a Shiny app to explore the use of restricted cubic splines to model non-linear effects
+Cubic splines are a way to model complex non-linear relationships between a continuous variable and outcome. `spliny` allows visualisation of over-fitting, advantages of non-linear relationships.
+
+The app to explore this is available at: https://drjgauthier.shinyapps.io/spliny/
+
+## Keynote: R for Clinical Trial Reporting - Frank Harrell
+`hmisc::describe()` - generates summary of quantiles for variables. The `plotly` package can be used to `plot()` where the data is the output of `hmisc::describe`.
+
+````
+hmisc::describe(x) %>% 
+  plot(); p$categorical
+````
+
+
+The same can be run for continuous data which will generate an interactive plot with the histograms showing number of individuals with each value for the variable.
+
+Typically sets the bin number to 100 (or less if there are less distinct values). This demonstrates the full range of data.
+
+`summaryM` replaces `summary[?something]`. The function can take a combination of dependent variables with given explanatory variable. Boxplots are replaced with dynamic variable violin plots.
+
+`histboxplot` will take a boxplot and add on various values around quartiles and a histogram. 
+
+
+`accrualReport` is a high-level function for accounting for subject accrual in various sites and hospitals also at country-level. The captions are actually generated automatically with `greport`. The violin plots automatically adjust alpha so that low-number records do not result in undue emphasis on results. 
+
+It is possible to generate custom PDF reports using `greport` which use javascript but this can only be managed through Adobe Acrobat Reader which is fragile for javascript support. This may make it unwise to pursue such an approach.
+
+`hreport` is an alternative package which handles HTML and LaTeX. The `Hmisc` package comes with a large list of translators and helper functions within `markupSpecs`.
+
+
+
+## projects: Facilitating Manuscript-Oriented Workflows for Scientific Teams
+The `projects` package aids workflow and reproducibility for R projects. Allows storage of package versions and dependencies for a project. Not convinced of the need for the whole package for existing projects but it will provide some useful info about handling package dependencies etc. 
+
+## spiritR: a workflow to enable direct upload of a clinical trial protocol to clinicaltrials.gov
+Does what it says on the tin. Spirit is a checklist for clinical trial protocols. Uses an Rmarkdown template which is converted to `.xml` which is uploaded to clinicaltrials.gov.
+
+
+## Keynote: Challenging Medical Dogmas with Data: Diabetes, Lipids, Blood pressure and Cardiovascular Risk
+The rHTE (heterogeneity of treatment effect) is largely governed by the prior. If you perform a subgroup analyses to detect rHTE with a 5% prior probability of differnce the false positive rate is 80-90%. This false positive rate falls only when the prior is greater. 
+
+The baseline risk of an event is important in determining the net benefit versus harm - those with a minimal risk of a condition will likely suffer adverse events far more often than gaining a benefit from their risk reduction. 
+
+Smater BP & statin guidelines could prevent up to 500,000 more qalys each year in India and China compared to current WHO guidelines - paper authored by Rod Hayward.
+
+
+## Creating Patient Timeline Visualizations with R timevis and plotly
+Swimmer plot - a horizontal bar with various time points of interest plotted. `timevis` is a package that allows timeline visualisations buuilt on top of `htmlwidgets`. 
+
+
+
+## Using Synthetic Control Arms to Improve Clinical Trials
+`matchit` is a package to allow generation of nearest neighbour matching based on frequentist statistics. Bayesian approach for selecting a control arm can work from more limited data. 
+
+## Development of a machine learning model to predict neonatal follow-up bilirubin levels and comparison with clinician performance
+Used a machine-learning approach with 80/20 testing and validation split and 10x cross-validation. 
+
+
+## A Data-Driven Approach to Exploring and Standardizing Inpatient Diabetes Care across a Healthcare System
+Uses database with BEETLE. Use Rmd to analyse the output from the database. The reports are automated and sent weekly or monthly to physicians etc.
+
+Use `flexdashboard`. 
+
+
+## Using urine to diagnose prostate cancer: developing two multimodal diagnostic models reproducibly within R
+`binder` and `holepunch` analyses. Creates a `dockerfile`. 
+
+
+## But my patient is sicker!
+Comorbidity packages: `icd`, `comorbidity` and `comoRbidity`. Some of the packages use the most up-to-date ICD codes whilst others use the original release. `comor` does not have source code available online and was used to determine the risk of death after procedures with more specific operation codes. 
+
+## Integrative Analysis and Visualization of Cancer Genomic Data in Cloud
+Utilised various genomic measures available from the TCGA. Hosted RStudio in AWS cloud. `tcgabiolinkr` is a BioconductR package. `GMRP` is a Mendelian randomisation package also from BioconductR.  
